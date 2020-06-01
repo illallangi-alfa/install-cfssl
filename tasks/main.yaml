@@ -1,0 +1,30 @@
+---
+
+- name: "Apply Templates"
+  template:
+    dest: "{{ item.dest }}"
+    src:  "{{ (item.dest | basename ()) + '.j2' }}"
+    mode: "{{ item.mode | default('0644') }}"
+  with_items: "{{ install_cfssl.templates[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] }}"
+  tags:
+    - "cfssl"
+
+- name: "Install cfssl (debian)"
+  environment:
+    GOPATH: "/usr/local/src/go"
+  shell: |
+    go get -u {{ item.url }}
+  args:
+    creates: "/usr/local/src/go/bin/{{ item.name }}"
+  with_items: "{{ install_cfssl.golang[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] }}"
+  tags:
+    - "cfssl"
+
+- name: "Link binaries"
+  file:
+    src: "/usr/local/src/go/bin/{{ item.name }}"
+    dest: "/usr/local/bin/{{ item.name }}"
+    state: link
+  with_items: "{{ install_cfssl.golang[(ansible_os_family | lower) + '_' + (ansible_architecture | lower)] }}"
+  tags:
+    - "cfssl"

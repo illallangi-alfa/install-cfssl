@@ -1,0 +1,27 @@
+---
+install_cfssl:
+  golang:
+    common: &common_golang
+      - name: cfssl
+        url: github.com/cloudflare/cfssl/cmd/cfssl
+      - name: cfssl-bundle
+        url: github.com/cloudflare/cfssl/cmd/cfssl-bundle
+      - name: cfssl-certinfo
+        url: github.com/cloudflare/cfssl/cmd/cfssl-certinfo
+      - name: cfssljson
+        url: github.com/cloudflare/cfssl/cmd/cfssljson
+      - name: cfssl-newkey
+        url: github.com/cloudflare/cfssl/cmd/cfssl-newkey
+      - name: cfssl-scan
+        url: github.com/cloudflare/cfssl/cmd/cfssl-scan
+      - name: mkbundle
+        url: github.com/cloudflare/cfssl/cmd/mkbundle
+      - name: multirootca
+        url: github.com/cloudflare/cfssl/cmd/multirootca
+    debian_armv7l: *common_golang
+    debian_x86_64: *common_golang
+  templates:
+    common: &common_templates
+      - dest: "/etc/systemd/system/cfssl@.service"
+    debian_armv7l: *common_templates
+    debian_x86_64: *common_templates

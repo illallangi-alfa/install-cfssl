@@ -1,0 +1,13 @@
+[Unit]
+Description=cfssl Service
+After=network.target
+AssertFileNotEmpty=/etc/sysconfig/cfssl@%i.env
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/sysconfig/cfssl@%i.env
+ExecStart=/usr/local/bin/cfssl serve
+StandardOutput=journal
+
+[Install]
+WantedBy=multi-user.target
